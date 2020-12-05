@@ -9,6 +9,7 @@ const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const db = knex({
@@ -21,23 +22,18 @@ const db = knex({
 
 const app = express();
 
+app.use(cors())
+app.use(bodyParser.json());
+
 const PORT = process.env.PORT || 3001;
 
-app.use(bodyParser.json());
-app.use(cors());
+app.get('/', (req, res) => { res.send(db.users) })
+app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
+app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
+app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db)})
+app.put('/image', (req, res) => { image.handleImage(req, res, db)})
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)})
 
-
-app.get('/', (req, res) => {res.send('it is working!') });
-
-app.post('/signin', (req, res) => signin.handleSignIn(req, res, db, bcrypt));
-
-app.post('/register', (req, res) => register.handleRegister(req, res, db, bcrypt) );
-
-app.get('/profile/:id', (req, res) => profile.handleProfileGet(req, res, db) );
-
-app.put('/image', (req, res) =>  image.handlerImageUpdate(req, res, db) );
-
-app.post('/imageurl', image.handlerApiCall);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`) );
 
