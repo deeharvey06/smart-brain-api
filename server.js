@@ -27,21 +27,17 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-app.get('/', (req, res) => {
-  res.send(database.users)
-})
+app.get('/', (req, res) => {res.send('it is working!') });
 
 app.post('/signin', (req, res) => signin.handleSignIn(req, res, db, bcrypt));
 
-app.post('/register', (req, res) => { register.handleRegister(res, req, db, bcrypt) });
+app.post('/register', (req, res) => register.handleRegister(res, req, db, bcrypt) );
 
-app.get('/profile/:id', (req, res) => { profile.handleProfileGet(res, req, db)});
+app.get('/profile/:id', (req, res) => profile.handleProfileGet(res, req, db) );
 
-app.put('/image', (req, res) => { image.handlerImageUpdate(res, req, db)});
+app.put('/image', (req, res) =>  image.handlerImageUpdate(res, req, db) );
 
 app.post('/imageurl', image.handlerApiCall);
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-})
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`) );
 
