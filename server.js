@@ -19,23 +19,21 @@ const db = knex({
     connectionString: process.env.DATABASE_URL,
     ssl: true
   }
-})
+});
 
 const app = express();
 
 app.use(morgan('combined'));
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 3001;
 
-app.get('/', (req, res) => { res.send(db.users) })
-app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
-app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
-app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db)})
-app.put('/image', (req, res) => { image.handleImage(req, res, db)})
-app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)})
-
+app.post('/signin', signin.signinAuthentication(db, bcrypt));
+app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) });
+app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) });
+app.post('/profile/:id', (req, res) => { profile.handleProfileUpdate(req, res, db) });
+app.put('/image', (req, res) => { image.handleImage(req, res, db) });
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`) );
-
